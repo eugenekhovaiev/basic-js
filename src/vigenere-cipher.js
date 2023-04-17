@@ -20,13 +20,94 @@ const { NotImplementedError } = require('../extensions/index.js');
  * 
  */
 class VigenereCipheringMachine {
-  encrypt() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  constructor (mode = true) {
+    this.mode = mode;
   }
-  decrypt() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+
+  encrypt(str, key) {
+    if (!str || !key) {
+      throw new Error('Incorrect arguments!');
+    }
+
+    let alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+    
+    let upperStrArr = str.toUpperCase().split('').filter(item => {
+      return item >= 'A'&& item <= 'Z';
+    });
+
+    let addititonArr = [];
+    for (let i = 0; i < Math.ceil(upperStrArr.length / key.length); i++) {
+      addititonArr.push(...key.toUpperCase().split(''));
+    }
+
+    addititonArr = addititonArr.slice(0, upperStrArr.length);
+
+    let cipheredArr = [];
+    for (let i = 0; i < upperStrArr.length; i++) {
+      const strIndex = alphabet.indexOf(upperStrArr[i]);
+      const keyIndex = alphabet.indexOf(addititonArr[i]);
+      if (strIndex + keyIndex >= alphabet.length) {
+        cipheredArr.push(alphabet[strIndex + keyIndex - alphabet.length]);
+      } else {
+        cipheredArr.push(alphabet[strIndex + keyIndex]);
+      }
+    }
+    
+    str.toUpperCase().split('').forEach((item, index) => {
+      if (!alphabet.includes(item)) {
+        cipheredArr.splice(index, 0, item);
+      }
+    });
+
+    if (this.mode === false) {
+      cipheredArr.reverse();
+    }
+
+    const cipheredStr = cipheredArr.join('');
+    return cipheredStr;
+  }
+
+  decrypt(str, key) {
+    if (!str || !key) {
+      throw new Error('Incorrect arguments!');
+    }
+
+    let alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+    
+    let upperStrArr = str.toUpperCase().split('').filter(item => {
+      return item >= 'A'&& item <= 'Z';
+    });
+
+    let addititonArr = [];
+    for (let i = 0; i < Math.ceil(upperStrArr.length / key.length); i++) {
+      addititonArr.push(...key.toUpperCase().split(''));
+    }
+
+    addititonArr = addititonArr.slice(0, upperStrArr.length);
+
+    let cipheredArr = [];
+    for (let i = 0; i < upperStrArr.length; i++) {
+      const strIndex = alphabet.indexOf(upperStrArr[i]);
+      const keyIndex = alphabet.indexOf(addititonArr[i]);
+      if ((keyIndex - strIndex) > 0) {
+        cipheredArr.push(alphabet[alphabet.length - (keyIndex - strIndex)]);
+      } else {
+        cipheredArr.push(alphabet[Math.abs(keyIndex - strIndex)]);
+      }
+    }
+    
+    str.toUpperCase().split('').forEach((item, index) => {
+      if (!alphabet.includes(item)) {
+        cipheredArr.splice(index, 0, item);
+      }
+    });
+
+    if (this.mode === false) {
+      cipheredArr.reverse();
+    }
+
+    const cipheredStr = cipheredArr.join('');
+    return cipheredStr;
   }
 }
 
