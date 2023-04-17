@@ -38,7 +38,7 @@ function getDNSStats(domains) {
       dns[1].push(domainDNS[0]);
       dns[2].push(domainDNS[1]);
     } else if (domainDNS.length === 1) {
-      dns[2].push(domainDNS[2]);
+      dns[2].push(domainDNS[0]);
     }
   }
 
